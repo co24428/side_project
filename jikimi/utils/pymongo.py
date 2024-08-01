@@ -13,7 +13,7 @@ def get_database():
     client = MongoClient(CONNECTION_STRING)
 
     # Create the database for our example (we will use the same database throughout the tutorial
-    return client['user_shopping_list'] 
+    return client['user_shopping_list'] #database name
 
 def insert():
     # Get the database
