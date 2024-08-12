@@ -6,7 +6,16 @@ const cardObjectDefinitions = [
 ]
 const cardBackImgPath = "./img/card-back-blue.png";
 
-const cardContainerElem = document.querySelector("./card-container");
+const cardContainerElem = document.querySelector(".card-container");
+
+createCards();
+
+function createCards(){
+    cardObjectDefinitions.forEach((cardItem)=>{
+        console.log(cardItem);
+        createCard(cardItem);
+    })
+}
 
 // create card html dinamically
 function createCard(cardItem){
@@ -25,7 +34,7 @@ function createCard(cardItem){
     addIdToElement(cardElem, cardItem.id);
 
     // add class to inner card element
-    addClassToElement(carInnerElem, "card-inner");
+    addClassToElement(cardInnerElem, "card-inner");
 
     // add class to inner card element
     addClassToElement(cardFrontElem, "card-front");
@@ -52,6 +61,9 @@ function createCard(cardItem){
     // add inner card element as child element to card element
     addChildElement(cardElem, cardInnerElem);
 
+    // add card element as child element to appropriate cell
+    addCardToGridCell(cardElem)
+
 
 
 }
@@ -69,4 +81,21 @@ function addSrcToImageElem(imgElem, src){
 }
 function addChildElement(parentElem, childElem){
     parentElem.appendChild(childElem);
+}
+
+function addCardToGridCell(card){
+    const cardPostionClassName = mapCardIdToGridCell(card);
+    const cardPosElem = document.querySelector(cardPostionClassName);
+    addChildElement(cardPosElem, card);
+}
+function mapCardIdToGridCell(card){
+    if(card.id == 1){
+        return ".card-pos-a"
+    } else if(card.id == 2){
+        return ".card-pos-b"
+    } else if(card.id == 3){
+        return ".card-pos-c"
+    } else if(card.id == 4){
+        return ".card-pos-d"
+    }
 }
