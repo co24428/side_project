@@ -8,7 +8,68 @@ const cardBackImgPath = "./img/card-back-blue.png";
 
 const cardContainerElem = document.querySelector(".card-container");
 
-createCards();
+let cards = [];
+
+const playGameButtonElem = document.getElementById("playGame");
+
+const collapsedGridAreaTemplate = "'a a' 'a a'";
+const cardCollectionCellClass = ".card-pos-a";
+
+loadGame();
+
+function loadGame(){
+    createCards();
+    
+    cards = document.querySelectorAll(".card");
+    playGameButtonElem.addEventListener('click', ()=>startGame());
+}
+function startGame(){
+    // alert("Start Game!!")
+    initializeNewGame();
+    startRound();
+}
+function initializeNewGame(){
+
+}
+function startRound(){
+    initializeNewRound();
+    collectCards();
+    flipCards(true);
+}
+function initializeNewRound(){
+
+}
+
+function collectCards(){
+    transformGridArea(collapsedGridAreaTemplate);
+    addCardsToGridAreaCell(cardCollectionCellClass);
+}
+function transformGridArea(areas){
+    cardContainerElem.style.gridTemplateAreas = areas;
+}
+function addCardsToGridAreaCell(cellPositionClassName){
+    const cellPositionClassElem = document.querySelector(cellPositionClassName);
+
+    cards.forEach((card,index) =>{
+        addChildElement(cellPositionClassElem, card);
+    })
+}
+
+function flipCard(card, flipToBack){
+    const innerCardElem = card.firstChild;
+    if(flipToBack && !innerCardElem.classList.contains("flip-it")){
+        innerCardElem.classList.add("flip-it");
+    } else if(innerCardElem.classList.contains("flip-it")) {
+        innerCardElem.classList.remove("flip-it");
+    }
+}
+function flipCards(filpToBack){
+    cards.forEach((card, index)=>{
+        setTimeout(()=>{
+            flipCard(card, filpToBack);
+        }, index * 100);
+    })
+}
 
 function createCards(){
     cardObjectDefinitions.forEach((cardItem)=>{
