@@ -54,12 +54,10 @@ body {
     border-radius: 13px;
 }
 
-.result {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    gap: 10px;
+#result {
+    margin-top: 10px;
+    font-size: 30px;
+    font-weight: 600;
 }
 
 
