@@ -36,7 +36,6 @@ body {
 .palindrome {
     display: flex;
     gap: 10px;
-    border: 2px solid red;
     width: 70%;
     height: 30px;
 
@@ -54,6 +53,15 @@ body {
     border: none;
     border-radius: 13px;
 }
+
+.result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    gap: 10px;
+}
+
 
 .help {
     box-sizing: border-box;
