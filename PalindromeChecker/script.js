@@ -1,6 +1,7 @@
 function checkPalindrome(){
     const textElem = document.getElementById("text-input");
-    const text = preprocessing(textElem.value);
+    const oriText = textElem.value;
+    const text = preprocessing(oriText);
     if (text === ""){
         alert("Please input a value");
         return 0;
@@ -19,24 +20,26 @@ function checkPalindrome(){
         }
     }
     if (isPalindrome) {
-        resultElem.innerText = `${text} is a palindrome`;
+        resultElem.innerText = `${oriText} is a palindrome`;
     } else {
-        resultElem.innerText = `${text} is not a palindrome`;
+        resultElem.innerText = `${oriText} is not a palindrome`;
 
     }
     textElem.value = "";
 }
-// TODO: Check punctuation: Check ASCII code...!
+// TODO: Check punctuation: 
+// Check ASCII code: 0-9(48-57) & A-Z(65-90) & a-z(97-122)
+// Regular Expression: regex
 // _eye (A palindrome)
 // A man, a plan, a canal. Panama (A palindrome)
 // My age is 0, 0 si ega ym. (A palindrome)
 // 0_0 (: /-\ :) 0-0 (A palindrome)
 // five|\_/|four (Not a palindrome)
 function preprocessing(str){
-    // change to lowercase & remove black characters 
-    return str.toLowerCase().split(' ').join('');
+    let result;
+    // change to alphanumeric
+    result = str.replace(/[^a-z0-9]/gi, '');
+    // change to lowercase
+    result = result.toLowerCase();
+    return result;
 }
-
-// document.addEventListener("DOMContentLoaded", (e)=>{
-
-// })
