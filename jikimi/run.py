@@ -1,65 +1,49 @@
 import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
-import numpy as np
-from PIL import Image
-from torchvision import transforms
-from model import ResNet18Classifier
+import utils
+import argparse
 
-def load_model(model_path, num_classes=10):
-    model = ResNet18Classifier(num_classes=num_classes)
-    model.load_state_dict(torch.load(model_path))
-    model.eval()
-    return model
 
-def preprocess_image(image_path):
-    transform = transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    ])
-    image = Image.open(image_path).convert('RGB')
-    image = transform(image).unsqueeze(0)  # Add batch dimension
-    return image
+def main(model_path):
+    labels = ['1','2','3','4','5','6','7','8','9','n']
+    
+    for label in labels:
+        image_path = './sample_data/' + label + '.png'  
+        num_classes = 11
+        
+        if model_path == 'MobileNetv2Classifier.pth':
+            model = utils.load_model(model_path, 'MobileNetV2', num_classes=num_classes)
+        elif model_path == 'ResNet18Classifier.pth':
+            model = utils.load_model(model_path, 'ResNet18', num_classes=num_classes)
+        elif model_path == 'EfficientNetB0Classifier.pth':
+            model = utils.load_model(model_path, 'EfficientNetB0', num_classes=num_classes)
+        else:
+            raise ValueError(f"Unsupported model: {model_path}")
 
-def imshow(inp, title=None):
-    inp = inp.numpy().transpose((1, 2, 0))
-    mean = np.array([0.485, 0.456, 0.406])
-    std = np.array([0.229, 0.224, 0.225])
-    inp = std * inp + mean
-    inp = np.clip(inp, 0, 1)
-    plt.imshow(inp)
-    if title is not None:
-        plt.title(title)
-    plt.pause(0.001)
+        # 이미지 전처리
+        image = utils.preprocess_image(image_path)
 
-def main():
-    model_path = 'resnet18_classifier.pth'
-    image_path = 'data/split_dataset/test/6/4digits_62_0.png'  # 테스트할 이미지 파일 경로
-    num_classes = 10
+        # 디바이스 설정
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        model = model.to(device)
+        image = image.to(device)
 
-    # 모델 로드
-    model = load_model(model_path, num_classes=num_classes)
+        # 예측 수행
+        with torch.no_grad():
+            outputs = model(image)
+            _, preds = torch.max(outputs, 1)
+            prediction = preds.item()
 
-    # 이미지 전처리
-    image = preprocess_image(image_path)
+        # 이미지 시각화
+        image = image.cpu().squeeze(0)  # Remove batch dimension
+        utils.imshow(image, title=f'Predicted: {prediction}')
 
-    # 디바이스 설정
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = model.to(device)
-    image = image.to(device)
-
-    # 예측 수행
-    with torch.no_grad():
-        outputs = model(image)
-        _, preds = torch.max(outputs, 1)
-        prediction = preds.item()
-
-    # 이미지 시각화
-    image = image.cpu().squeeze(0)  # Remove batch dimension
-    imshow(image, title=f'Predicted: {prediction}')
-
-    plt.show()
+        plt.show()
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description="Run the model with a specified path.")
+    parser.add_argument('-m', '--model_path', type=str, required=True, help='Path to the model file')
+    args = parser.parse_args()
+    
+    main(args.model_path)
