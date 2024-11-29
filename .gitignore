@@ -4,3 +4,4 @@ jikimi_full
 wider_face_detection/raw_datasets
 wider_face_detection/data
 wider_face_detection/.venv
+.vscode/settings.json

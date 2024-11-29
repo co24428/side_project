@@ -1,0 +1,14 @@
+# making python venv
+python3 -m venv .venv
+. .venv/bin/activate
+
+# pip install
+* for using deep learning
+pip install torch torchvision torchaudio
+pip install opencv-python
+* for visualization
+pip install matplotlob, pillow
+
+# 01.11.24
+* check raw data: draw bbox on an image
+python utils/data_utils.py
